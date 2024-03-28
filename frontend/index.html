@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Frontend App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="userInfo" class="user-info" style="display: none;"></div>
+
+    <div id="loginForm" class="form-container">
+        <h2>Iniciar Sesión</h2>
+        <input type="email" id="loginEmail" class="input-field" placeholder="Correo electrónico">
+        <input type="password" id="loginPassword" class="input-field" placeholder="Contraseña">
+        <button onclick="login()" class="action-button">Iniciar Sesión</button>
+        <button onclick="loginComoInvitado()" class="action-button">Ingresar como Invitado</button>
+    </div>
+
+    <div id="appContent" style="display: none;">
+        <div class="actions-container">
+            <button onclick="showRegisterForm()" class="action-button">Registro</button>
+            <button onclick="showUsers()" class="action-button">Listar Usuarios</button>
+            <button onclick="showSearch()" class="action-button">Buscar Usuarios</button>
+            <button onclick="showActualizar()" class="action-button">Actualizar Usuarios</button>
+            <button onclick="showEliminar()" class="action-button">Eliminar Usuarios</button>
+        </div>
+
+        <!-- Sección de Registro -->
+        <div id="registerForm" class="form-container" style="display: none;">
+            <h2>Registro</h2>
+            <input type="text" id="registerName" class="input-field" placeholder="Nombre completo">
+            <input type="email" id="registerEmail" class="input-field" placeholder="Correo electrónico">
+            <input type="password" id="registerPassword" class="input-field" placeholder="Contraseña">
+            <!-- Campo de selección para el rol del usuario -->
+            <select id="registerRole" class="input-field">
+                <option value="user">Usuario</option>
+                <option value="admin">Administrador</option>
+                <option value="guest">Invitado</option>
+            </select>
+            <button onclick="register()" class="action-button">Registrar</button>
+        </div>
+
+        <!-- Listado de Usuarios -->
+        <div id="userList" class="list-container" style="display:none;">
+            <h2>Usuarios</h2>
+            <ul id="users"></ul>
+        </div>
+
+        <!-- Búsqueda de Usuario -->
+        <div id="searchUserForm" class="form-container" style="display: none;">
+            <h2>Buscar Usuario por Correo Electrónico</h2>
+            <input type="email" id="searchEmail" class="input-field" placeholder="Ingresa el correo electrónico">
+            <button onclick="buscarUsuarioPorCorreo()" class="action-button">Buscar</button>
+        </div>
+
+        <!-- Actualización de Usuario -->
+        <div id="updateUserForm" class="form-container" style="display: none;">
+            <h2>Actualizar Usuario</h2>
+            <input type="text" id="updateUserId" class="input-field" placeholder="ID del Usuario">
+            <input type="text" id="updateUserName" class="input-field" placeholder="Nuevo Nombre">
+            <input type="email" id="updateUserEmail" class="input-field" placeholder="Nuevo Correo Electrónico">
+            <select id="updateUserRole" class="input-field">
+                <option value="user">Usuario</option>
+                <option value="admin">Administrador</option>
+                <option value="guest">Invitado</option>
+            </select>
+            <button onclick="actualizarUsuario()" class="action-button">Actualizar</button>
+        </div>
+        <div id="deleteUserForm" class="form-container" style="display: none;">
+            <h2>Eliminar Usuario</h2>
+            <input type="text" id="deleteUserId" class="input-field" placeholder="ID del Usuario">
+            <button onclick="eliminarUsuario()" class="action-button">Eliminar Usuario</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
