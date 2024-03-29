@@ -7,31 +7,31 @@ function login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Login fallido: ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Almacena el token y los datos del usuario en localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userName', data.user.name);
-        localStorage.setItem('userEmail', data.user.email);
-        localStorage.setItem('userRole', data.user.role);
-        localStorage.setItem('userId', data.user.id);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Login fallido: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Almacena el token y los datos del usuario en localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userName', data.user.name);
+            localStorage.setItem('userEmail', data.user.email);
+            localStorage.setItem('userRole', data.user.role);
+            localStorage.setItem('userId', data.user.id);
 
-        // Actualiza la UI para reflejar el estado de login exitoso
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('appContent').style.display = 'block';
-        document.getElementById('userInfo').style.display = 'block';
-        document.getElementById('userInfo').textContent = `Bienvenido, ${data.user.name}`;
+            // Actualiza la UI para reflejar el estado de login exitoso
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('userInfo').textContent = `Bienvenido, ${data.user.name}`;
 
-    })
-    .catch(error => {
-        console.error('Error en el login:', error);
-        alert(error.message);
-    });
+        })
+        .catch(error => {
+            console.error('Error en el login:', error);
+            alert(error.message);
+        });
 }
 
 function showRegisterForm() {
@@ -67,7 +67,7 @@ function showEliminar() {
 
 
 function showUsers() {
-    const usersElement = document.getElementById('users'); 
+    const usersElement = document.getElementById('users');
     if (!usersElement) {
         console.error('El elemento para listar los usuarios no se encuentra en el HTML.');
         return;
@@ -102,7 +102,7 @@ function showUsers() {
 
             // Procesa cada usuario y lo añade al elemento de lista
             users.forEach(user => {
-                if (user.name && user.email) { 
+                if (user.name && user.email) {
                     const li = document.createElement('li');
                     li.textContent = `${user.name} (${user.email})`;
                     usersElement.appendChild(li);
@@ -124,7 +124,7 @@ function register() {
     fetch('http://localhost:3000/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
-        body: JSON.stringify({ name, email, password, role }), 
+        body: JSON.stringify({ name, email, password, role }),
     })
         .then(response => {
             if (!response.ok) {
@@ -143,8 +143,7 @@ function register() {
 }
 
 function buscarUsuarioPorCorreo() {
-    const email = document.getElementById('searchEmail').value; 
-
+    const email = document.getElementById('searchEmail').value;
     fetch(`http://localhost:3000/api/usuarios/buscar?correo=${email}`, {
         method: 'GET',
         headers: {
@@ -160,16 +159,22 @@ function buscarUsuarioPorCorreo() {
         })
         .then(data => {
             console.log('Usuario encontrado:', data);
-            alert('Usuario encontrado: ' + JSON.stringify(data));
+            // Actualiza el contenedor con la información del usuario
+            document.getElementById('userInfoDisplay').innerHTML = `
+            <p>ID: ${data._id}</p>
+            <p>Nombre: ${data.name}</p>
+            <p>Correo: ${data.email}</p>
+            <p>Rol: ${data.role}</p>
+        `;
         })
         .catch((error) => {
             console.error('Error en la búsqueda:', error);
-            alert(error.message);
+            document.getElementById('userInfoDisplay').innerHTML = `<p>${error.message}</p>`;
         });
 }
 
 function actualizarUsuario() {
-    
+
     const userId = document.getElementById('updateUserId').value;
     const nombre = document.getElementById('updateUserName').value;
     const correo = document.getElementById('updateUserEmail').value;

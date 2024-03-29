@@ -4,109 +4,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentación API</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <title>Documentación API - Sistema de Gestión de Usuarios</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f2f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #e9ecef;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 960px;
             margin: auto;
-            background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: #fff;
         }
 
-        h1 {
-            color: #0056b3;
-            font-size: 24px;
-        }
-
+        h1,
         h2 {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            font-size: 20px;
             color: #333;
         }
 
-        p {
-            font-size: 16px;
-            line-height: 1.6;
+        .api-endpoint {
+            background-color: #f8f9fa;
+            border-left: 5px solid #007bff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        code {
+            display: block;
+            background-color: #f4f4f6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            color: #333;
+            overflow-x: auto;
         }
 
         pre {
-            background-color: #f4f4f4;
-            padding: 15px;
+            background-color: #f4f4f6;
             border-radius: 5px;
+            padding: 10px;
             overflow-x: auto;
-            font-size: 14px;
-            line-height: 1.45;
-            color: #333;
-        }
-
-        .endpoint {
-            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>API RESTful Documentación</h1>
+    <div class="container my-5 ">
+        <h1>API RESTful - Sistema de Gestión de Usuarios</h1>
 
-        <div class="endpoint">
-            <h2>Registro de Usuario (POST /api/usuarios)</h2>
-            <p>Este endpoint registra un nuevo usuario con los datos proporcionados.</p>
+        <div class="api-endpoint">
+            <h2>Inicio de Sesión - POST api/auth/login</h2>
+            <p>Este endpoint permite a los usuarios iniciar sesión utilizando su correo electrónico y contraseña.</p>
+
+            <h3>Headers:</h3>
+            <code>Content-Type: application/json</code>
+
+            <h3>Body Parameters:</h3>
             <pre>{
-  "name": "Usuario Ejemplo",
-  "email": "usuario@mail.com",
-  "password": "passwordSeguro",
-  "role": "user"
+  "email": "usuario@example.com",
+  "password": "tuContraseña"
 }</pre>
-        </div>
 
-        <div class="endpoint">
-            <h2>Inicio de Sesión (POST /api/auth/login)</h2>
-            <p>Autentica al usuario y devuelve un token JWT para acceso a rutas protegidas.</p>
+            <h3>Respuesta Exitosa:</h3>
+            <code>200 OK</code>
             <pre>{
-  "email": "usuario@mail.com",
-  "password": "passwordSeguro"
+  "token": "eyJhbGciOiJIUzI...",
+  "user": {
+    "name": "Nombre del Usuario",
+    "email": "usuario@example.com",
+    "role": "usuario",
+    "id": "idDelUsuario"
+  }
 }</pre>
+            <h3>Respuestas de Error:</h3>
+            <code>401 Unauthorized</code>
+            <pre>{"message": "Autenticación fallida. Usuario no encontrado."}</pre>
+            <pre>{"message": "Autenticación fallida. Contraseña incorrecta."}</pre>
         </div>
-        <div class="endpoint">
-            <h2>Modificar Usuario (PUT /api/usuarios/:id)</h2>
-            <p>Permite actualizar la información del usuario. Solo accesible por el usuario correspondiente o por
-                administradores. Solamente los administradores pueden modificar el rol del usuario</p>
+
+        <div class="api-endpoint">
+            <h2>Acceso para Invitados - GET api/auth/guest-access</h2>
+            <p>Este endpoint proporciona un token JWT para usuarios invitados, permitiendo acceso limitado a la
+                aplicación.</p>
+
+            <h3>Respuesta Exitosa:</h3>
+            <code>200 OK</code>
+            <pre>{"token": "eyJhbGciOiJIUzI..."}</pre>
+        </div>
+
+        <section class="api-endpoint" id="create-user" class="my-4">
+            <h2>Crear Usuario - POST /api/usuarios/</h2>
+            <p>Este endpoint permite crear un nuevo usuario. Solo accesible por administradores.</p>
+            <h3>Headers:</h3>
+            <pre>Authorization: &lt;token&gt;</pre>
+            <h3>Body Parameters:</h3>
             <pre>{
-  "name": "Nuevo Nombre",
-  "email": "nuevoemail@mail.com",
-  "role": "user"
-}</pre>
-        </div>
+        "name": "Juan Perez",
+        "email": "juan.perez@example.com",
+        "password": "password123",
+        "role": "user"
+      }</pre>
+            <h3>Respuestas:</h3>
+            <h4>201 Created</h4>
+            <pre>{
+        "message": "Usuario registrado exitosamente",
+        "userId": "idGenerado"
+      }</pre>
+            <h4>400 Bad Request</h4>
+            <pre>{
+        "message": "Rol inválido. Los roles permitidos son admin, user, guest."
+      }</pre>
+        </section>
 
-        <div class="endpoint">
-            <h2>Listar Usuarios (GET /api/usuarios/)</h2>
-            <p>Retorna una lista de todos los usuarios. Requiere token de autenticación (admin,user, guest).</p>
-        </div>
+        <section class="api-endpoint" id="delete-user" class="my-4">
+            <h2>Eliminar Usuario - DELETE /api/usuarios/:id</h2>
+            <p>Este endpoint permite eliminar un usuario existente. Solo accesible por administradores.</p>
+            <h3>Headers:</h3>
+            <pre>Authorization: &lt;token&gt;</pre>
+            <h3>URL Parameters:</h3>
+            <pre>:id - ID del Usuario</pre>
+            <h3>Respuestas:</h3>
+            <h4>200 OK</h4>
+            <pre>{
+        "mensaje": "Usuario eliminado correctamente"
+      }</pre>
+            <h4>404 Not Found</h4>
+            <pre>{
+        "mensaje": "Usuario no encontrado."
+      }</pre>
+        </section>
 
+        <section class="api-endpoint" id="update-user" class="my-4">
+            <h2>Actualizar Usuario - PUT /api/usuarios/:id</h2>
+            <p>Este endpoint permite actualizar la información de un usuario. Accesible por administradores y por el
+                mismo
+                usuario que desea actualizar su información.</p>
+            <h3>Headers:</h3>
+            <pre>Authorization: &lt;token&gt;</pre>
+            <h3>URL Parameters:</h3>
+            <pre>:id - ID del Usuario</pre>
+            <h3>Body Parameters:</h3>
+            <pre>{
+        "name": "Nuevo Nombre",
+        "email": "nuevo.email@example.com",
+        "role": "user"
+      }</pre>
+            <h3>Respuestas:</h3>
+            <h4>200 OK</h4>
+            <pre>{
+        "mensaje": "Usuario actualizado correctamente"
+      }</pre>
+            <h4>400 Bad Request</h4>
+            <pre>{
+        "message": "Rol inválido. Los roles permitidos son admin, user, guest."
+      }</pre>
+        </section>
 
-        <div class="endpoint">
-            <h2>Eliminar Usuario (DELETE /api/usuarios/:id)</h2>
-            <p>Elimina el usuario especificado. Solo disponible para administradores.</p>
-        </div>
+        <section class="api-endpoint" id="search-user" class="my-4">
+            <h2>Buscar Usuario por Correo Electrónico - GET /api/usuarios/buscar</h2>
+            <p>Este endpoint permite buscar un usuario por su correo electrónico. Solo accesible por administradores.
+            </p>
+            <h3>Headers:</h3>
+            <pre>Authorization: &lt;token&gt;</pre>
+            <h3>Query Parameters:</h3>
+            <pre>?correo=usuario@example.com</pre>
+            <h3>Respuestas:</h3>
+            <h4>200 OK</h4>
+            <pre>{
+        "name": "Nombre del Usuario",
+        "email": "usuario@example.com",
+        "role": "user",
+        "id": "idDelUsuario"
+      }</pre>
+            <h4>404 Not Found</h4>
+            <pre>{
+        "mensaje": "No se encontró un usuario con ese correo electrónico."
+      }</pre>
+        </section>
 
-        <div class="endpoint">
-            <h2>Búsqueda de Usuario por Correo Electrónico (GET /api/usuarios/search?email={email})</h2>
-            <p>Encuentra y muestra la información del usuario basada en el correo electrónico. Solo disponible para
-                administradores.</p>
-        </div>
+        <section class="api-endpoint" id="list-users" class="my-4">
+
+            <h1 class="my-4">API RESTful - Listar Usuarios</h1>
+            <div class="api-section">   
+                <h2>Listar Usuarios - GET /api/usuarios/</h2>
+                <p>Este endpoint lista todos los usuarios registrados en el sistema. Está disponible para usuarios
+                    autenticados o
+                    invitados, proporcionando un acceso controlado a la información del usuario.</p>
+
+                <h3>Headers:</h3>
+                <pre>Authorization: Bearer &lt;token&gt;</pre>
+
+                <h3>Respuesta Exitosa (200 OK):</h3>
+                <p>Devuelve una lista de usuarios, excluyendo información sensible como contraseñas.</p>
+                <pre>[
+                {
+                  "name": "Nombre del Usuario 1",
+                  "email": "usuario1@example.com",
+                  "role": "user",
+                  "id": "idDelUsuario1"
+                },
+                {
+                  "name": "Nombre del Usuario 2",
+                  "email": "usuario2@example.com",
+                  "role": "admin",
+                  "id": "idDelUsuario2"
+                }
+                // Más usuarios...
+              ]</pre>
+
+                <h3>Potenciales Respuestas de Error:</h3>
+                <p><strong>500 Internal Server Error</strong>: Si ocurre un error al procesar la solicitud en el
+                    servidor.</p>
+                <pre>{"message": "Error al recuperar los usuarios"}</pre>
+            </div>
     </div>
 </body>
 

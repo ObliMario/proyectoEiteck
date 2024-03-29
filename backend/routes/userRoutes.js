@@ -6,12 +6,6 @@ const { verificarAdmin } = require('../middleware/authMiddleware'); // Correcta 
 
 const router = express.Router();
 
-// Ruta protegida
-router.get('/rutaProtegidaAdmin', verificarAdmin, (req, res) => {
-  res.json({ mensaje: "Acceso a la ruta protegida concedido", usuario: req.user });
-});
-
-
 // Ruta de registro [Acceso: admin]
 router.post('/', verificarAdmin, async (req, res) => {
 
